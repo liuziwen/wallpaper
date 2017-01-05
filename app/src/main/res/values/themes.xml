@@ -33,4 +33,8 @@
         <item name="android:textColor">#fff</item>
     </style>
 
+    <style name="welcomeTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/bj2</item>
+        </style>
+
 </resources>

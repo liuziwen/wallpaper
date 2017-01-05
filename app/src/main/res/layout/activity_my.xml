@@ -5,180 +5,150 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:scrollbars="vertical"
-
     tools:context=".MyActivity">
 
-
-<LinearLayout
-    android:id="@+id/ll"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:orientation="vertical"
-    android:layout_weight="1"
-    >
-
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-            <!--TextView
-                android:id="@+id/textView1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:text="下拉刷新"
-                android:textSize="20sp"
-                android:textStyle="bold" /-->
-
-            <GridView
-                android:background="#ddd"
-                android:id="@+id/grid1"
-                android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:numColumns="3"
-                android:layout_gravity="center_horizontal"
-                android:scrollbars="vertical"
-                android:layout_weight="1"
-                />
+                android:layout_weight="1">
+
+                <!--TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:text="下拉刷新"
+                    android:textSize="20sp"
+                    android:textStyle="bold" /-->
+
+                <GridView
+                    android:id="@+id/grid1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="#ddd"
+                    android:numColumns="3"
+                    android:scrollbars="vertical" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <LinearLayout
+                    android:id="@+id/add"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/addpictureselector"
+                    android:descendantFocusability="beforeDescendants"
+                    android:gravity="center"
+                    android:padding="10dp">
 
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:src="@drawable/ic_crop_original_white_36dp" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                </LinearLayout>
 
-        >
-        <LinearLayout
-            android:id="@+id/add"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="10dp"
-            android:background="@drawable/addpictureselector"
-            android:descendantFocusability="beforeDescendants"
+                <LinearLayout
+                    android:id="@+id/add2b"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/addpictureselector"
+                    android:descendantFocusability="beforeDescendants"
+                    android:gravity="center">
 
-            >
-            <ImageButton
+                    <ImageButton
+                        android:id="@+id/add2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:src="@drawable/ic_perm_media_white_36dp" />
+                </LinearLayout>
 
-                android:src="@drawable/ic_crop_original_white_36dp"
-                android:clickable="false"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-               />
+                <LinearLayout
+                    android:id="@+id/takephoto"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/addpictureselector"
+                    android:descendantFocusability="beforeDescendants"
+                    android:gravity="center"
+                    android:padding="10dp">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:src="@drawable/ic_camera_enhance_white_36dp" />
+                </LinearLayout>
+            </TableRow>
 
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/add2b"
-            android:background="@drawable/addpictureselector"
-            android:descendantFocusability="beforeDescendants"
-            android:layout_weight="1"
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/mycolor"
+            android:visibility="gone">
 
-            android:layout_height="match_parent"
-            android:gravity="center"
-
-            >
-            <ImageButton
-                android:id="@+id/add2"
-                android:src="@drawable/ic_perm_media_white_36dp"
-                android:clickable="false"
-                android:background="@android:color/transparent"
+            <Button
+                android:id="@+id/cancle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               />
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:text=" 撤销  |"
+                android:textColor="#fff"
+                android:textSize="20sp" />
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/takephoto"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp"
-            android:background="@drawable/addpictureselector"
-            android:descendantFocusability="beforeDescendants"
-            >
-            <ImageButton
-
-                android:src="@drawable/ic_camera_enhance_white_36dp"
-                android:clickable="false"
-                android:background="@android:color/transparent"
+            <TextView
+                android:id="@+id/textcount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                />
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="#fff"
+                android:textSize="15sp" />
 
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:text="|  删除 "
+                android:textColor="#fff"
+                android:textSize="20sp" />
 
-        </LinearLayout>
-
-    </TableRow>
-
-
-</LinearLayout>
-    <RelativeLayout
-        android:id="@+id/relative"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/mycolor"
-        android:layout_marginTop="2dp"
-        android:visibility="gone"
-        >
-        <Button
-
-            android:id="@+id/cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" 撤销  |"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:background="@null"
-            android:layout_centerVertical="true"
-
-            />
-        <TextView
-
-            android:id="@+id/textcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#fff"
-            android:textSize="15sp"
-            android:layout_centerInParent="true"
-
-            />
-
-        <Button
-
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="|  删除 "
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:background="@null"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
-
-
-
-    </RelativeLayout>
-</LinearLayout>
-
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>

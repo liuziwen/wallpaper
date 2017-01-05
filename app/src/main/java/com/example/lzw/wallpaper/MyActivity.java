@@ -3,34 +3,24 @@ package com.example.lzw.wallpaper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,176 +29,68 @@ import android.widget.Toast;
 
 import com.example.lzw.wallpaper.Net.NetPicture;
 import com.example.lzw.wallpaper.PictureSet.BitmapUtilities;
-import com.example.lzw.wallpaper.PictureSet.SetBeauty;
+import com.example.lzw.wallpaper.PictureSet.ProcessPictureActivity;
 import com.example.lzw.wallpaper.SDFileExplorer.SDFileExplorer;
-import com.example.lzw.wallpaper.sqliteDatabase.MyDatabaseHelper;
+import com.example.lzw.wallpaper.sqliteDatabase.DBUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 
-public class MyActivity extends Activity {
-    //相片路径
-    String mCurrentPhotoPath;
-    Button  cancle, delete;
-    //MyBaseAdapter adapter;
-    public static GridView grid;
-    int n, visi = View.GONE;
-    MyDatabaseHelper db;
-    String path;
-    String id[];
-    ArrayList<Map<String, String>> result;
-    static boolean ischeck[];
-    BaseAdapter mba;
-    RelativeLayout main;
-    Holder holder;
+public class MyActivity extends Activity implements View.OnClickListener {
+    //拍照所得相片路径
+    public String mCurrentPhotoPath;
+
+    public GridView grid;
+    public BaseAdapter mba;
+
+    public ArrayList<Map<String, String>> result;
+
+    int isCheckBoxVisible = View.GONE;
+    public String imageId[];
+    static boolean isCheckBoxCheck[];
     RelativeLayout relativeLayout;
-    boolean bb = true,startorstop=true;
+    private boolean isCanJump = true;
+    private boolean startorstop = true;
     LayoutInflater viewInflator;
     TextView count;
+
     public static int screenWidth;
     public static int screenHeight;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences=getSharedPreferences("mytime", Context.MODE_PRIVATE);
-        editor=preferences.edit();
-        int count1=preferences.getInt("count",0);
-        if(count1==0){Intent in=new Intent(MyActivity.this,BjActivity.class);
-            startActivity(in);}
-        editor.putInt("count",++count1);
-        editor.commit();
-
-        editor=preferences.edit();
         setContentView(R.layout.activity_my);
 
-        WindowManager windowManager = getWindowManager();
-        Display display = windowManager.getDefaultDisplay();
+        screenWidth = getResources().getDisplayMetrics().widthPixels;
+        screenHeight = getResources().getDisplayMetrics().heightPixels;
+        Button cancle = (Button) findViewById(R.id.cancle);
+        Button delete = (Button) findViewById(R.id.delete);
 
-        screenWidth = display.getWidth();
-        screenHeight = display.getHeight();
-        main = (RelativeLayout) findViewById(R.id.main);
-
-        cancle = (Button) findViewById(R.id.cancle);
-        delete = (Button) findViewById(R.id.delete);
         grid = (GridView) findViewById(R.id.grid1);
         LinearLayout add = (LinearLayout) findViewById(R.id.add);
-        //add2 = (ImageButton) findViewById(R.id.add2);
         LinearLayout add2b = (LinearLayout) findViewById(R.id.add2b);
         LinearLayout tp = (LinearLayout) findViewById(R.id.takephoto);
         count = (TextView) findViewById(R.id.textcount);
         relativeLayout = (RelativeLayout) findViewById(R.id.relative);
-        holder = new Holder();
-
-        db = new MyDatabaseHelper(this, "my.path", 1);
-
-
-        result = quary();
+        result = (ArrayList<Map<String, String>>) DBUtil.getInstance().queryAll();
         mba = new MyBaseAdapter(this);
-
         grid.setAdapter(mba);
 
-        add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                Intent picture = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(picture, 1);
+        add.setOnClickListener(this);
+        add2b.setOnClickListener(this);
+        tp.setOnClickListener(this);
+        cancle.setOnClickListener(this);
+        delete.setOnClickListener(this);
+        final SwipeRefreshLayout
+                swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
-            }
-        });
-
-        add2b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MyActivity.this, SDFileExplorer.class);
-                startActivity(intent);
-            }
-        });
-
-        //拍照
-        tp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "_";
-                //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                File wallpaper = new File("/sdcard/wallpaper/");
-                if (!wallpaper.exists()) {
-                    wallpaper.mkdirs();
-                }
-                File storageDir = new File("/mnt/sdcard/wallpaper/takephoto");
-                if (!storageDir.exists()) {
-                    storageDir.mkdirs();
-                }
-//                // Save a file: path for use with ACTION_VIEW intents
-
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-                        mCurrentPhotoPath = "file:" + photoFile.getAbsolutePath();
-
-                        if (!photoFile.exists()) photoFile.mkdir();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                        startActivityForResult(takePictureIntent, 2);
-                    }
-                }
-
-
-            }
-        });
-
-
-
-        cancle.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                relativeLayout.setVisibility(View.GONE);
-                visi = View.GONE;
-                //grid.setAdapter(mba);
-                bb = true;
-
-            }
-        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-
-                for (int i = 0; i < n; i++) {
-                    System.out.println(i+"=="+ischeck[i]);
-                    if (ischeck[i]) {
-                        deletei(db.getReadableDatabase(), id[i]);
-                    }
-                }
-                Toast.makeText(MyActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
-                relativeLayout.setVisibility(View.GONE);
-                visi = View.GONE;
-                refresh();
-                bb = true;
-            }
-        });
-
-final SwipeRefreshLayout
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
-       // final TextView tv=(TextView)findViewById(R.id.textView1);
         //设置刷新时动画的颜色，可以设置4个
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -242,12 +124,13 @@ final SwipeRefreshLayout
             c.moveToFirst();
             int columnIndex = c.getColumnIndex(MediaStore.Images.Media.DATA);
             String picturePath = c.getString(columnIndex);
-            String name=c.getString(c.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+            String name = c.getString(c.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
             c.close();
-            insert(db.getReadableDatabase(),name,picturePath);
+            DBUtil.getInstance().insert(name, picturePath);
+            Toast.makeText(MyActivity.this, "图片已添加！！", Toast.LENGTH_SHORT).show();
         }
 
-        if (requestCode == 2 && resultCode == Activity.RESULT_OK ) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             File f = new File(mCurrentPhotoPath);
             Uri contentUri = Uri.fromFile(f);
@@ -256,13 +139,74 @@ final SwipeRefreshLayout
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add:
+                Intent picture = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(picture, 1);
+                break;
+            case R.id.add2b:
+                Intent intent = new Intent(MyActivity.this, SDFileExplorer.class);
+                startActivity(intent);
+                break;
+            case R.id.takephoto:
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "_";
+                //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File wallpaper = new File("/sdcard/wallpaper/");
+                if (!wallpaper.exists()) {
+                    wallpaper.mkdirs();
+                }
+                File storageDir = new File("/mnt/sdcard/wallpaper/takephoto");
+                if (!storageDir.exists()) {
+                    storageDir.mkdirs();
+                }
+//                // Save a file: path for use with ACTION_VIEW intents
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Ensure that there's a camera activity to handle the intent
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+                        mCurrentPhotoPath = "file:" + photoFile.getAbsolutePath();
+                        if (!photoFile.exists()) photoFile.mkdir();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        startActivityForResult(takePictureIntent, 2);
+                    }
+                }
+                break;
+            case R.id.cancle:
+                relativeLayout.setVisibility(View.GONE);
+                isCheckBoxVisible = View.GONE;
+                isCanJump = true;
+                break;
+            case R.id.delete:
+                for (int i = 0; i < result.size(); i++) {
+                    System.out.println(i + "==" + isCheckBoxCheck[i]);
+                    if (isCheckBoxCheck[i]) {
+                        DBUtil.getInstance().delete("id", imageId[i]);
+                    }
+                }
+                Toast.makeText(MyActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                relativeLayout.setVisibility(View.GONE);
+                isCheckBoxVisible = View.GONE;
+                refresh();
+                isCanJump = true;
+                break;
+        }
+    }
 
 
-
-    public final class Holder {
-        public CheckBox cb;
+    static class ViewHolder {
+        public CheckBox checkBox;
         public ImageView image;
-
     }
 
     public class MyBaseAdapter extends BaseAdapter {
@@ -273,7 +217,7 @@ final SwipeRefreshLayout
 
         @Override
         public int getCount() {
-            return n;
+            return result.size();
         }
 
         @Override
@@ -289,150 +233,117 @@ final SwipeRefreshLayout
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            final ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = viewInflator.inflate(R.layout.cell, null);
+                viewHolder = new ViewHolder();
+                viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.cb1);
+                viewHolder.image = (ImageView) convertView.findViewById(R.id.image1);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
 
-            convertView = viewInflator.inflate(R.layout.cell, null);
-            final ImageView image = (ImageView) convertView.findViewById(R.id.image1);
-            final CheckBox cb = (CheckBox) convertView.findViewById(R.id.cb1);
-            cb.setVisibility(visi);
-
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
-                public boolean onLongClick(View v) {
-
-                    ischeck = new boolean[n];
-                    for (int i = 0; i < n; i++) {
-                        ischeck[i] = false;
-                    }
-                    relativeLayout.setVisibility(View.VISIBLE);
-                    visi = View.VISIBLE;
-                    //grid.setAdapter(mba);
-                    bb = false;
-                    return true;
-                }
-            });
-
-            id = new String[n];
+            viewHolder.checkBox.setVisibility(isCheckBoxVisible);
+            imageId = new String[result.size()];
             Map map = result.get(position);
-            path = (String) map.get("uri");
-            final String name=(String) map.get("name");
+            final String[] checkedImagePath = {(String) map.get("uri")};
+            final String name = (String) map.get("name");
 
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        if(bb){
+            for (int i = 0; i < result.size(); i++) {
+                map = result.get(i);
+                imageId[i] = (String) map.get("id");
+            }
+            GetBitmap task = new GetBitmap(viewHolder.image);
+            task.execute(checkedImagePath[0]);
+            viewHolder.image.setImageResource(R.drawable.ic_refresh_white_36dp);
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (isCanJump) {
                         //image.setAlpha(0.5f);
                         Bundle bundle = new Bundle();
                         Map map = result.get(position);
-                        path = (String) map.get("uri");
-                        bundle.putString("uri", path);
+                        checkedImagePath[0] = (String) map.get("uri");
+                        bundle.putString("uri", checkedImagePath[0]);
                         bundle.putString("name", name);
-
-                        Intent intent = new Intent(MyActivity.this, SetBeauty.class);
+                        Intent intent = new Intent(MyActivity.this, ProcessPictureActivity.class);
                         intent.putExtras(bundle);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.activity_anim_in,R.anim.activity_anim_out);
-                        }
-                        else {
-
-                            if (cb.isChecked()) {
-                                cb.setChecked(false);
-                                ischeck[position] = false;
-                            } else {
-                                cb.setChecked(true);
-                                ischeck[position] = true;
-                            }
-                            System.out.println(position+"=="+ischeck[position]);
+                        overridePendingTransition(R.anim.activity_anim_in, R.anim.activity_anim_out);
+                    } else {
+                        if (viewHolder.checkBox.isChecked()) {
+                            viewHolder.checkBox.setChecked(false);
+                            isCheckBoxCheck[position] = false;
+                        } else {
+                            viewHolder.checkBox.setChecked(true);
+                            isCheckBoxCheck[position] = true;
                         }
                     }
-                });
+                }
+            });
 
-
-            for (int i = 0; i < n; i++) {
-                map = result.get(i);
-                id[i] = (String) map.get("id");
-            }
-            GetBitmap task=new GetBitmap(image);
-            task.execute(path);
-            image.setImageResource(R.drawable.ic_refresh_white_36dp);
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                public boolean onLongClick(View v) {
+                    if (isCheckBoxCheck == null || isCheckBoxCheck.length != result.size()) {
+                        isCheckBoxCheck = new boolean[result.size()];
+                    }
+                    for (int i = 0; i < result.size(); i++) {
+                        isCheckBoxCheck[i] = false;
+                    }
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    isCheckBoxVisible = View.VISIBLE;
+                    isCanJump = false;
+                    return true;
+                }
+            });
             return convertView;
         }
 
 
-        class GetBitmap extends AsyncTask<String,Integer,Bitmap>{
+        class GetBitmap extends AsyncTask<String, Integer, Bitmap> {
             ImageView iv;
-            GetBitmap(ImageView iv){this.iv=iv;}
+
+            GetBitmap(ImageView iv) {
+                this.iv = iv;
+            }
+
             @Override
             protected Bitmap doInBackground(String... params) {
                 return BitmapUtilities.returnSquareBitmap(params[0]);
             }
-            protected void onPostExecute(Bitmap bitmap){
+
+            protected void onPostExecute(Bitmap bitmap) {
                 iv.setImageBitmap(bitmap);
             }
         }
     }
 
 
-
-    public ArrayList<Map<String, String>> quary() {
-        Cursor cursor = db.getReadableDatabase().rawQuery("select * from data ", null);
-        ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
-        n = 0;
-        while (cursor.moveToNext()) {
-
-            Map<String, String> map = new HashMap<String, String>();
-            // 取出查询记录中第2列、第3列的值
-            //判断uri对应的图片是否存在
-            File whether=new File(cursor.getString(2));
-            if(whether.exists()){
-                n++;
-                map.put("id", cursor.getString(0));
-                map.put("name", cursor.getString(1));
-                map.put("uri", cursor.getString(2));
-
-                result.add(map);}
-
-          else  deletei(db.getReadableDatabase(), cursor.getString(0));;
-
+    public static void filedelete(File file) {
+        if (file.isFile()) {
+            file.delete();
+            return;
         }
 
-        return result;
-    }
-
-
-
-
-//    public void onDestroy() {
-//
-//        super.onDestroy();
-//
-//            File netimagecache=new File("/mnt/sdcard/wallpaper/netimagecache");
-//            if(netimagecache.exists()){filedelete(netimagecache);}
-//        }
-
-
-        public static void filedelete(File file) {
-            if (file.isFile()) {
+        if (file.isDirectory()) {
+            File[] childFiles = file.listFiles();
+            if (childFiles == null || childFiles.length == 0) {
                 file.delete();
                 return;
             }
 
-            if(file.isDirectory()){
-                File[] childFiles = file.listFiles();
-                if (childFiles == null || childFiles.length == 0) {
-                    file.delete();
-                    return;
-                }
-
-                for (int i = 0; i < childFiles.length; i++) {
-                    filedelete(childFiles[i]);
-                }
-                file.delete();
+            for (int i = 0; i < childFiles.length; i++) {
+                filedelete(childFiles[i]);
             }
+            file.delete();
         }
-
-    public void refresh(){
-        result=quary();
-        mba.notifyDataSetChanged();
     }
 
+    public void refresh() {
+        result = (ArrayList<Map<String, String>>) DBUtil.getInstance().queryAll();
+        mba.notifyDataSetChanged();
+    }
 
 
     @Override
@@ -465,23 +376,21 @@ final SwipeRefreshLayout
             return true;
 
             case R.id.s: {
-                final Intent intent = new Intent(MyActivity.this, ChangeService.class);
-                if(startorstop){
-                    if(n==0){ Toast.makeText(MyActivity.this, "请先添加一些图片！", Toast.LENGTH_SHORT).show();}
-                    else {
+                final Intent intent = new Intent(MyActivity.this, ChangeWallpaperService.class);
+                if (startorstop) {
+                    if (result.size() == 0) {
+                        Toast.makeText(MyActivity.this, "请先添加一些图片！", Toast.LENGTH_SHORT).show();
+                    } else {
                         startService(intent);
                         Toast.makeText(MyActivity.this, "更换壁纸成功！", Toast.LENGTH_SHORT).show();
                     }
-                    startorstop=false;
+                    startorstop = false;
                     item.setIcon(R.drawable.ic_pause_circle_outline_white_36dp);
-                }
-                else {
+                } else {
                     Toast.makeText(MyActivity.this, "已停止！", Toast.LENGTH_SHORT).show();
                     stopService(intent);
-
                     item.setIcon(R.drawable.ic_play_circle_outline_white_36dp);
-                    startorstop=true;
-
+                    startorstop = true;
                 }
 
             }
@@ -491,17 +400,9 @@ final SwipeRefreshLayout
         }
     }
 
-    public void deletei(SQLiteDatabase db, String n) {
-        db.delete("data", "id=?", new String[]{n});
-    }
-
-    private void insert(SQLiteDatabase db,String ed1,String ed2){
-            db.execSQL("insert into data values(null,?,?)",new String[]{ed1,ed2});
-            Toast.makeText(MyActivity.this, "图片已添加！！", Toast.LENGTH_SHORT).show();
-    }
-
     public void onResume() {
         super.onResume();
+        refresh();
         System.out.println("resumeIIIIIIIIIIIIIIIIIIIIIIII");
     }
 

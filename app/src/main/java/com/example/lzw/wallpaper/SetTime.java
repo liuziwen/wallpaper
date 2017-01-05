@@ -13,34 +13,30 @@ import android.widget.TextView;
 
 
 public class SetTime extends Activity {
-SharedPreferences preferences;
-SharedPreferences.Editor editor;
-
-
-
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_time);
-        preferences=getSharedPreferences("mytime", Context.MODE_PRIVATE);
-        editor=preferences.edit();
-        final TextView time=(TextView)findViewById(R.id.time1);
-        Button up=(Button)findViewById(R.id.up);
-        Button down=(Button)findViewById(R.id.down);
-        Button set=(Button)findViewById(R.id.set);
-        final EditText newtime=(EditText)findViewById(R.id.newtime);
-        final int t=preferences.getInt("time",5);
-//        editor.putInt("time", 5);
-//        editor.commit();
-        time.setText("当前设置每"+t+"秒更换一次壁纸");
-        newtime.setText(""+preferences.getInt("time",5));
+        preferences = getSharedPreferences("mytime", Context.MODE_PRIVATE);
+        editor = preferences.edit();
+        final TextView time = (TextView) findViewById(R.id.time1);
+        Button up = (Button) findViewById(R.id.up);
+        Button down = (Button) findViewById(R.id.down);
+        Button set = (Button) findViewById(R.id.set);
+        final EditText newtime = (EditText) findViewById(R.id.newtime);
+        final int t = preferences.getInt("time", 5);
+
+        time.setText("当前设置每" + t + "秒更换一次壁纸");
+        newtime.setText("" + preferences.getInt("time", 5));
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editor.putInt("time", Integer.parseInt(newtime.getText().toString()));
                 editor.commit();
-                time.setText("当前设置每"+preferences.getInt("time",5)+"秒更换一次壁纸");
+                time.setText("当前设置每" + preferences.getInt("time", 5) + "秒更换一次壁纸");
             }
         });
 
@@ -48,8 +44,8 @@ SharedPreferences.Editor editor;
         up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a=Integer.parseInt(newtime.getText().toString());
-                newtime.setText(""+(a+1));
+                int a = Integer.parseInt(newtime.getText().toString());
+                newtime.setText("" + (a + 1));
             }
         });
 
@@ -58,7 +54,7 @@ SharedPreferences.Editor editor;
             @Override
             public void onClick(View v) {
                 int a = Integer.parseInt(newtime.getText().toString());
-                if(a>1) newtime.setText(""+(a-1));
+                if (a > 1) newtime.setText("" + (a - 1));
                 else newtime.setText("1");
 
             }

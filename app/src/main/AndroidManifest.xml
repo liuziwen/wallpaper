@@ -5,16 +5,13 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/a14"
+        android:name=".util.MyApp"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name=".MyActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SDFileExplorer.SDFileExplorer"
@@ -22,7 +19,7 @@
         </activity>
 
         <service
-            android:name=".ChangeService"
+            android:name=".ChangeWallpaperService"
             android:enabled="true"
             android:exported="true" >
         </service>
@@ -36,14 +33,18 @@
             android:label="@string/title_activity_set_change" >
         </activity>
         <activity
-            android:name=".PictureSet.SetBeauty"
+            android:name=".PictureSet.ProcessPictureActivity"
             android:label="@string/title_activity_set_beauty"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".BjActivity"
+            android:name=".WelcomeActivity"
             android:label="@string/title_activity_bj"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:theme="@style/welcomeTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Net.NetPicture"

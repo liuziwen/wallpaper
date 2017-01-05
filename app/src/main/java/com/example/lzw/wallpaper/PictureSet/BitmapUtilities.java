@@ -3,7 +3,6 @@ package com.example.lzw.wallpaper.PictureSet;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.widget.ImageView;
 
 import com.example.lzw.wallpaper.MyActivity;
 
@@ -13,88 +12,85 @@ public class BitmapUtilities {
         // TODO Auto-generated constructor stub
     }
 
-    public static Bitmap getBitmapThumbnail(String path,int width,int height){
-                Bitmap bm;
-                BitmapFactory.Options opt = new BitmapFactory.Options();
-                //这个isjustdecodebounds很重要
-                opt.inJustDecodeBounds = true;
-                  bm = BitmapFactory.decodeFile(path, opt);
+    public static Bitmap getBitmapThumbnail(String path, int width, int height) {
+        Bitmap bm;
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        //这个isjustdecodebounds很重要
+        opt.inJustDecodeBounds = true;
+        bm = BitmapFactory.decodeFile(path, opt);
 
-                //获取到这个图片的原始宽度和高度
-                int picWidth  = opt.outWidth;
-                int picHeight = opt.outHeight;
+        //获取到这个图片的原始宽度和高度
+        int picWidth = opt.outWidth;
+        int picHeight = opt.outHeight;
 
-                //获取屏的宽度和高度
+        //获取屏的宽度和高度
+        int screenWidth = 100;
+        int screenHeight = 100;
+        //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
+        opt.inSampleSize = 1;
+        //根据屏的大小和图片大小计算出缩放比例
+        if (picWidth > picHeight) {
+            if (picWidth > screenWidth)
+                opt.inSampleSize = picWidth / screenWidth;
+        } else {
+            if (picHeight > screenHeight)
+                opt.inSampleSize = picHeight / screenHeight;
+        }
 
-                int screenWidth = 100;
-                int screenHeight = 100;
-        //        System.out.println("111111111111witch="+iv.getWidth());
-                //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
-                opt.inSampleSize = 1;
-                //根据屏的大小和图片大小计算出缩放比例
-                if(picWidth > picHeight){
-                    if(picWidth> screenWidth)
-                        opt.inSampleSize = picWidth/screenWidth;
-                }
-                else{
-                    if(picHeight > screenHeight)
-
-                        opt.inSampleSize = picHeight/screenHeight;
-                }
-
-                //这次再真正地生成一个有像素的，经过缩放了的bitmap
-                opt.inJustDecodeBounds = false;
-                bm = BitmapFactory.decodeFile(path, opt);
-                return bm;
+        //这次再真正地生成一个有像素的，经过缩放了的bitmap
+        opt.inJustDecodeBounds = false;
+        bm = BitmapFactory.decodeFile(path, opt);
+        return bm;
     }
 
-    public Bitmap getBitmapThumbnail(Bitmap bmp,int width,int height){
+    public Bitmap getBitmapThumbnail(Bitmap bmp, int width, int height) {
         Bitmap bitmap = null;
-        if(bmp != null ){
+        if (bmp != null) {
             int bmpWidth = bmp.getWidth();
             int bmpHeight = bmp.getHeight();
-            if(width != 0 && height !=0){
+            if (width != 0 && height != 0) {
                 Matrix matrix = new Matrix();
                 float scaleWidth = ((float) width / bmpWidth);
                 float scaleHeight = ((float) height / bmpHeight);
                 matrix.postScale(scaleWidth, scaleHeight);
                 bitmap = Bitmap.createBitmap(bmp, 0, 0, bmpWidth, bmpHeight, matrix, true);
-            }else{
+            } else {
                 bitmap = bmp;
             }
         }
         return bitmap;
     }
-//NetBaseAdapter
-    public static Bitmap returnSquareBitmap(String str){
+
+    //NetBaseAdapter
+    public static Bitmap returnSquareBitmap(String str) {
         Bitmap bm;
         //把加载的图片缩小与剪切
-            BitmapFactory.Options opt = new BitmapFactory.Options();
-            //这个isjustdecodebounds很重要
-            opt.inJustDecodeBounds = true;
-            bm = BitmapFactory.decodeFile(str, opt);
-            //获取到这个图片的原始宽度和高度
-            int picWidth = opt.outWidth;
-            int picHeight = opt.outHeight;
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        //这个isjustdecodebounds很重要
+        opt.inJustDecodeBounds = true;
+        bm = BitmapFactory.decodeFile(str, opt);
+        //获取到这个图片的原始宽度和高度
+        int picWidth = opt.outWidth;
+        int picHeight = opt.outHeight;
 
-            int pWidth = (MyActivity.screenWidth ) / 3;
-            int pHeight = (MyActivity.screenHeight ) / 3;
+        int pWidth = (MyActivity.screenWidth) / 3;
+        int pHeight = (MyActivity.screenHeight) / 3;
 
-            //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
-            opt.inSampleSize = 1;
-            //根据屏的大小和图片大小计算出缩放比例
-            if (picWidth > picHeight) {
-                if (picWidth > pWidth)
-                    opt.inSampleSize = picWidth / pWidth;
-            } else {
-                if (picHeight > pHeight)
+        //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
+        opt.inSampleSize = 1;
+        //根据屏的大小和图片大小计算出缩放比例
+        if (picWidth > picHeight) {
+            if (picWidth > pWidth)
+                opt.inSampleSize = picWidth / pWidth;
+        } else {
+            if (picHeight > pHeight)
 
-                    opt.inSampleSize = picHeight / pHeight;
-            }
+                opt.inSampleSize = picHeight / pHeight;
+        }
 
-            //这次再真正地生成一个有像素的，经过缩放了的bitmap
-            opt.inJustDecodeBounds = false;
-            bm = BitmapFactory.decodeFile(str, opt);
+        //这次再真正地生成一个有像素的，经过缩放了的bitmap
+        opt.inJustDecodeBounds = false;
+        bm = BitmapFactory.decodeFile(str, opt);
 
         Bitmap bm2;
         if (bm.getWidth() >= bm.getHeight()) {
