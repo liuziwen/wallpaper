@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:duration="1000">
+    <!-- 定义缩放变换 -->
+    <scale android:fromXScale="0.1"
+        android:toXScale="1"
+        android:fromYScale="0.1"
+        android:toYScale="1"
+        android:pivotX="50%"
+        android:pivotY="50%"
+
+        />
+    <!-- 定义位移变换 -->
+    <!--translate
+        android:fromXDelta="0.0"
+        android:toXDelta="-1000.0"/-->
+    <alpha
+        android:fromAlpha="0.1"
+        android:toAlpha="1"
+        />
+
+</set>

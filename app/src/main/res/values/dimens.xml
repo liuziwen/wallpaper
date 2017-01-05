@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <color name="actionText">#fff</color>
+    <color name="maincolor">#8bc34a</color>
+    <color name="selectedmaincolor">#aed581</color>
+    <color name="buttontextcolor">#fff</color>
+</resources>

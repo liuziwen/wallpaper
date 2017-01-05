@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="mydialog" parent="@android:style/Theme.Dialog">
+                <item name="android:windowFrame">@null</item><!-- 边框 -->
+                <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
+                <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
+                <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+                <item name="android:windowBackground">@drawable/bj</item><!-- 自己想要的背景 -->
+                <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
+            </style>
+
+    <style name="mDialog" parent="@android:style/Theme.Holo.DialogWhenLarge">
+
+    </style>
+
+
+</resources>

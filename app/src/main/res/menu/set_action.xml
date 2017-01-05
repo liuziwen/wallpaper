@@ -1,0 +1,40 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.lzw.wallpaper.MyActivity" >
+    <item android:id="@+id/s"
+        android:title="开始"
+        android:icon="@drawable/ic_play_circle_outline_white_36dp"
+        android:showAsAction="always"/>
+
+    <!-- 搜索, 应该作为动作按钮展示-->
+    <item android:id="@+id/action_set"
+        android:icon="@drawable/ic_expand_more_white_36dp"
+        android:title="@string/set"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+
+        >
+        <menu>
+            <group>
+               <item
+               android:id="@+id/settime"
+               android:icon="@drawable/ic_alarm_add_black_36dp"
+               android:title="设置时间"  />
+            <item
+                android:id="@+id/setchange"
+                android:title="使用说明"
+                android:icon="@drawable/ic_assignment_late_black_36dp"
+                 />
+                <item
+                    android:id="@+id/net"
+                    android:title="下载图片"
+                    android:icon="@drawable/ic_file_download_black_36dp"
+                    />
+
+
+        </group>
+           </menu>
+</item>
+    <!-- 设置, 在溢出菜单中展示 -->
+
+</menu>

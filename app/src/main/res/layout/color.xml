@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:padding="20dp"
+android:id="@+id/l"
+    >
+    <TableRow android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+
+
+
+    </TableRow>
+
+
+
+
+
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:text="宽度："
+                android:layout_marginRight="5dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="5"
+
+                > </SeekBar>
+        </TableRow>
+
+    <TextView
+        android:text="颜色："
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        />
+
+
+
+</LinearLayout>

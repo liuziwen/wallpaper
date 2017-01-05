@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Stick</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sdfile_explorer">SDFileExplorer</string>
+    <string name="set">"设置"</string>
+    <string name="setTime">设置时间</string>
+    <string name="setBeauty">编辑图片</string>
+    <string name="setChange">使用说明</string>
+    <string name="title_activity_set_time">设置时间</string>
+    <string name="title_activity_set_change">使用说明</string>
+    <string name="title_activity_set_beauty">编辑图片</string>
+    <string name="title_activity_bj">BjActivity</string>
+    <string name="title_activity_net_picture">NetPicture</string>
+    <string name="title_activity_web_view">WebView</string>
+    <string name="title_activity_net_image">NetImage</string>
+
+</resources>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.lzw.wallpaper">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/a14"
+        android:label="@string/app_name"
+        android:theme="@style/CustomActionBarTheme" >
+        <activity
+            android:name=".MyActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SDFileExplorer.SDFileExplorer"
+            android:label="@string/title_activity_sdfile_explorer" >
+        </activity>
+
+        <service
+            android:name=".ChangeService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".SetTime"
+            android:label="@string/title_activity_set_time" >
+        </activity>
+        <activity
+            android:name=".Hlp"
+            android:label="@string/title_activity_set_change" >
+        </activity>
+        <activity
+            android:name=".PictureSet.SetBeauty"
+            android:label="@string/title_activity_set_beauty"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".BjActivity"
+            android:label="@string/title_activity_bj"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".Net.NetPicture"
+            android:label="@string/title_activity_net_picture" >
+        </activity>
+        <activity
+            android:name=".Net.MyWebView"
+            android:label="@string/title_activity_web_view" >
+        </activity>
+        <activity
+            android:name=".Net.NetImage"
+            android:label="@string/title_activity_net_image" >
+        </activity>
+    </application>
+
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- uses-permission android:name="android.permission.BLUETOOTH" / -->
+
+</manifest>
