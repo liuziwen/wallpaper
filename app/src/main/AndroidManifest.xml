@@ -33,7 +33,7 @@
             android:label="@string/title_activity_set_change" >
         </activity>
         <activity
-            android:name=".PictureSet.ProcessPictureActivity"
+            android:name=".picture.ProcessPictureActivity"
             android:label="@string/title_activity_set_beauty"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>

@@ -1,4 +1,4 @@
-package com.example.lzw.wallpaper.PictureSet;
+package com.example.lzw.wallpaper.picture;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -73,8 +73,8 @@ public class BitmapUtilities {
         int picWidth = opt.outWidth;
         int picHeight = opt.outHeight;
 
-        int pWidth = (MyActivity.screenWidth) / 3;
-        int pHeight = (MyActivity.screenHeight) / 3;
+        int pWidth = (MyActivity.screenWidth) / 4;
+        int pHeight = (MyActivity.screenHeight) / 4;
 
         //isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
         opt.inSampleSize = 1;

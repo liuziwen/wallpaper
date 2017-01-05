@@ -1,4 +1,4 @@
-package com.example.lzw.wallpaper.PictureSet;
+package com.example.lzw.wallpaper.picture;
 
 import android.app.Activity;
 import android.app.AlertDialog;

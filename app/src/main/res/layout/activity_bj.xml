@@ -11,9 +11,17 @@
     android:gravity="center"
     tools:context="com.example.lzw.wallpaper.WelcomeActivity">
 
+    <com.example.lzw.wallpaper.util.GradientTextView
+        android:id="@+id/name"
+        android:text="WallPaper"
+        android:textSize="40sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
+
     <Button
-        android:id="@+id/start"
-        android:text="开始使用"
+        android:id="@+id/horizontal"
+        android:text="横向渐变"
         android:textColor="#fff"
         android:textSize="20dp"
         android:layout_width="wrap_content"
@@ -21,10 +29,19 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/bjb"/>
     <Button
-        android:id="@+id/help"
-        android:text="使用帮助"
+        android:id="@+id/vertical"
+        android:text="纵向渐变"
         android:textColor="#fff"
         android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bjb"/>
+    <Button
+        android:id="@+id/start"
+        android:text="开始使用"
+        android:textColor="#fff"
+        android:textSize="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bjb"/>

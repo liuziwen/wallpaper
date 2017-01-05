@@ -20,6 +20,7 @@ import java.util.TimerTask;
 
 public class ChangeWallpaperService extends Service {
     public static final String log = "ChangeWallpaperService";
+    public static boolean isServiceRunning = false;
     ArrayList<Map<String, String>> result;
     WallpaperManager wm;
     int current = 0;
@@ -33,7 +34,7 @@ public class ChangeWallpaperService extends Service {
                 wm = WallpaperManager.getInstance(ChangeWallpaperService.this);
             }
             try {
-                if (current >= result.size() - 1) {
+                if (current >= result.size()) {
                     current = 0;
                 }
                 Map map1 = result.get(current++);
@@ -55,6 +56,7 @@ public class ChangeWallpaperService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(log, "onCreate");
+        isServiceRunning = true;
         preferences = getSharedPreferences("mytime", Context.MODE_PRIVATE);
         result = (ArrayList<Map<String, String>>) DBUtil.getInstance().queryAll();
         wm = WallpaperManager.getInstance(this);
@@ -71,6 +73,7 @@ public class ChangeWallpaperService extends Service {
     public void onDestroy() {
         Log.d(log, "onDestroy");
         super.onDestroy();
+        isServiceRunning = false;
         timer.cancel();
     }
 }

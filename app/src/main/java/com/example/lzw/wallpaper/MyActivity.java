@@ -28,8 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lzw.wallpaper.Net.NetPicture;
-import com.example.lzw.wallpaper.PictureSet.BitmapUtilities;
-import com.example.lzw.wallpaper.PictureSet.ProcessPictureActivity;
+import com.example.lzw.wallpaper.picture.BitmapUtilities;
+import com.example.lzw.wallpaper.picture.ProcessPictureActivity;
 import com.example.lzw.wallpaper.SDFileExplorer.SDFileExplorer;
 import com.example.lzw.wallpaper.sqliteDatabase.DBUtil;
 
@@ -55,7 +55,6 @@ public class MyActivity extends Activity implements View.OnClickListener {
     static boolean isCheckBoxCheck[];
     RelativeLayout relativeLayout;
     private boolean isCanJump = true;
-    private boolean startorstop = true;
     LayoutInflater viewInflator;
     TextView count;
 
@@ -254,6 +253,7 @@ public class MyActivity extends Activity implements View.OnClickListener {
                 map = result.get(i);
                 imageId[i] = (String) map.get("id");
             }
+            viewHolder.image.setTag(checkedImagePath[0]);
             GetBitmap task = new GetBitmap(viewHolder.image);
             task.execute(checkedImagePath[0]);
             viewHolder.image.setImageResource(R.drawable.ic_refresh_white_36dp);
@@ -303,9 +303,11 @@ public class MyActivity extends Activity implements View.OnClickListener {
 
         class GetBitmap extends AsyncTask<String, Integer, Bitmap> {
             ImageView iv;
+            String uri;
 
             GetBitmap(ImageView iv) {
                 this.iv = iv;
+                uri = (String) iv.getTag();
             }
 
             @Override
@@ -314,7 +316,9 @@ public class MyActivity extends Activity implements View.OnClickListener {
             }
 
             protected void onPostExecute(Bitmap bitmap) {
-                iv.setImageBitmap(bitmap);
+                if (uri.equals(iv.getTag())) {
+                    iv.setImageBitmap(bitmap);
+                }
             }
         }
     }
@@ -351,6 +355,8 @@ public class MyActivity extends Activity implements View.OnClickListener {
         // 为ActionBar扩展菜单项
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.set_action, menu);
+        menu.findItem(R.id.s).setIcon(ChangeWallpaperService.isServiceRunning ?
+                R.drawable.ic_pause_circle_outline_white_36dp : R.drawable.ic_play_circle_outline_white_36dp);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -377,20 +383,18 @@ public class MyActivity extends Activity implements View.OnClickListener {
 
             case R.id.s: {
                 final Intent intent = new Intent(MyActivity.this, ChangeWallpaperService.class);
-                if (startorstop) {
+                if (!ChangeWallpaperService.isServiceRunning) {
                     if (result.size() == 0) {
                         Toast.makeText(MyActivity.this, "请先添加一些图片！", Toast.LENGTH_SHORT).show();
                     } else {
                         startService(intent);
                         Toast.makeText(MyActivity.this, "更换壁纸成功！", Toast.LENGTH_SHORT).show();
+                        item.setIcon(R.drawable.ic_pause_circle_outline_white_36dp);
                     }
-                    startorstop = false;
-                    item.setIcon(R.drawable.ic_pause_circle_outline_white_36dp);
                 } else {
                     Toast.makeText(MyActivity.this, "已停止！", Toast.LENGTH_SHORT).show();
                     stopService(intent);
                     item.setIcon(R.drawable.ic_play_circle_outline_white_36dp);
-                    startorstop = true;
                 }
 
             }

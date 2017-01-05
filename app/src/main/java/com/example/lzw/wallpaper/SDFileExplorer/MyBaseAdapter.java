@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.lzw.wallpaper.PictureSet.BitmapUtilities;
+import com.example.lzw.wallpaper.picture.BitmapUtilities;
 import com.example.lzw.wallpaper.R;
 
 import java.lang.ref.WeakReference;

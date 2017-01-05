@@ -19,22 +19,16 @@ public class NetImage extends Activity {
         setContentView(R.layout.activity_net_image);
         String url="http://sj.zol.com.cn"+getIntent().getStringExtra("url");
         WebView view=(WebView)findViewById(R.id.webview);
-
         view.loadUrl(url);
         view.getSettings().getJavaScriptEnabled();
-
         view.setWebViewClient(new WebViewClient(){
-
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
                 view.loadUrl(url);
-
                 return true;
             }
         });
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,4 +1,4 @@
-package com.example.lzw.wallpaper.PictureSet;
+package com.example.lzw.wallpaper.picture;
 
 /**
  * Created by lzw on 2015/3/12.

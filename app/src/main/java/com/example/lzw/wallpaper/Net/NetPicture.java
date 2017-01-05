@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.LruCache;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,56 +37,46 @@ import java.io.IOException;
 
 public class NetPicture extends Activity {
     ListView gv;
-    String[] title,linkimg;
-static String[] url;
-    Handler mhandler = new Handler()
-    {
-        public void handleMessage(Message msg)
-        {
-            if(msg.what == 0x123)
-            {
+    String[] title, linkimg;
+    static String[] url;
+    Handler mhandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x123) {
                 gv.setAdapter(new MyNetBaseAdapter(NetPicture.this));
             }
         }
     };
-      @Override
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_net_picture);
-        gv=(ListView)findViewById(R.id.nlv);
-          ConnectivityManager cwjManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-          NetworkInfo info = cwjManager.getActiveNetworkInfo();
-          if (info != null && info.isAvailable()){
-              getjsoup.start();
-          }
-          else
-          {
-              Toast.makeText(NetPicture.this,"无互联网连接",Toast.LENGTH_SHORT).show();
-          }
-
-
+        gv = (ListView) findViewById(R.id.nlv);
+        ConnectivityManager cwjManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cwjManager.getActiveNetworkInfo();
+        if (info != null && info.isAvailable()) {
+            getjsoup.start();
+        } else {
+            Toast.makeText(NetPicture.this, "无互联网连接", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public static class MyHolder{
+    public static class MyHolder {
         public ImageView niv;
         public TextView ntv;
-
     }
 
-    public  class MyNetBaseAdapter extends BaseAdapter{
-
+    public class MyNetBaseAdapter extends BaseAdapter {
         private LayoutInflater mLayoutInflater = null;
-
         private Context mContext = null;
         private RequestQueue mQueue;
         private ImageLoader mImageLoader;
 
-
-        public MyNetBaseAdapter(Context con){
-            mContext=con;
-            mLayoutInflater=LayoutInflater.from(con);
+        public MyNetBaseAdapter(Context con) {
+            mContext = con;
+            mLayoutInflater = LayoutInflater.from(con);
             mQueue = Volley.newRequestQueue(con);
-            mImageLoader = new ImageLoader(mQueue,new BitmapCache());
+            mImageLoader = new ImageLoader(mQueue, new BitmapCache());
 
         }
 
@@ -108,24 +97,24 @@ static String[] url;
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            MyHolder viewHolder=null;
-            if(convertView==null){
+            MyHolder viewHolder = null;
+            if (convertView == null) {
                 viewHolder = new MyHolder();
-                convertView = mLayoutInflater.inflate(R.layout.netcell,null);
+                convertView = mLayoutInflater.inflate(R.layout.netcell, null);
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent in= new Intent(NetPicture.this,NetImage.class);
-                        in.putExtra("url",url[position]);
+                        Intent in = new Intent(NetPicture.this, NetImage.class);
+                        in.putExtra("url", url[position]);
                         startActivity(in);
                     }
                 });
 
-                viewHolder.niv = (ImageView)convertView.findViewById(R.id.netcellp);
-                viewHolder.ntv=(TextView)convertView.findViewById(R.id.netcellt);
+                viewHolder.niv = (ImageView) convertView.findViewById(R.id.netcellp);
+                viewHolder.ntv = (TextView) convertView.findViewById(R.id.netcellt);
                 convertView.setTag(viewHolder);
-            }else{
-                viewHolder = (MyHolder)convertView.getTag();
+            } else {
+                viewHolder = (MyHolder) convertView.getTag();
             }
 
             ImageLoader.ImageListener listener = ImageLoader.getImageListener(viewHolder.niv, android.R.drawable.ic_menu_rotate, android.R.drawable.ic_delete);
@@ -136,7 +125,6 @@ static String[] url;
             return convertView;
         }
     }
-
 
 
     public class BitmapCache implements ImageLoader.ImageCache {
@@ -163,30 +151,27 @@ static String[] url;
         }
     }
 
-    Thread getjsoup=new Thread(){
-        public void run(){
+    Thread getjsoup = new Thread() {
+        public void run() {
             Looper.prepare();
             Document doc = null;
             try {
                 doc = Jsoup.connect("http://sj.zol.com.cn/samsung/galaxys4_bizhi/").get();
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
 
             Elements links = doc.getElementsByClass("photo-list-padding");
             System.out.println(links);
-            title=new String[links.size()];
-            url=new String[links.size()];
-            linkimg=new String[links.size()];
+            title = new String[links.size()];
+            url = new String[links.size()];
+            linkimg = new String[links.size()];
 
-            int i=0;
+            int i = 0;
             for (Element link : links) {
                 title[i] = link.text();
                 url[i] = link.select("a").attr("href");
-                linkimg[i]=link.select("img").attr("src");
-
-                //System.out.println(title[i].toString() + "\n" + url[i].toString() + "\n" + linkimg[i].toString()+"\n");
+                linkimg[i] = link.select("img").attr("src");
                 i++;
             }
 
@@ -194,9 +179,6 @@ static String[] url;
             Looper.loop();
         }
     };
-
-
-
 
 
     @Override

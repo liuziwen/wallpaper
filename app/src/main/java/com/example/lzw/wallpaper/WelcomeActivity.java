@@ -6,17 +6,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.lzw.wallpaper.util.GradientTextView;
+
 
 public class WelcomeActivity extends Activity {
-    Button start, help;
+    Button horizontal, vertical, start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bj);
         start = (Button) findViewById(R.id.start);
-        help = (Button) findViewById(R.id.help);
-
+        horizontal = (Button) findViewById(R.id.horizontal);
+        vertical = (Button) findViewById(R.id.vertical);
+        final GradientTextView gradientTextView = (GradientTextView) findViewById(R.id.name);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,11 +29,18 @@ public class WelcomeActivity extends Activity {
             }
         });
 
-        help.setOnClickListener(new View.OnClickListener() {
+        horizontal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(WelcomeActivity.this, Hlp.class);
-                startActivity(in);
+                gradientTextView.setGradientOrientation(GradientTextView.HORIZONTAL);
+                gradientTextView.startAnimator();
+            }
+        });
+        vertical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gradientTextView.setGradientOrientation(GradientTextView.VERTICAL);
+                gradientTextView.startAnimator();
             }
         });
     }
